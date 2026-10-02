@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Thirunavukkarasu Palaniappa — CSC 4370/6370 Coursework 03 CSS Foundations Lab">
+<title>Coursework 03 | Thirunavukkarasu Palaniappa</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="hero">
+  <div class="container hero__inner">
+    <p class="eyebrow">Georgia State University · Web Programming</p>
+    <h1>Coursework 03 <span>CSS Foundations Lab</span></h1>
+    <p class="hero__lead">Build, inspect, explain, and defend the CSS decisions behind a responsive page.</p>
+    <div class="identity">
+      <span><strong>Student:</strong> Thirunavukkarasu Palaniappa</span>
+      <span><strong>Course:</strong> CSC 4370/6370 · Graduate</span>
+      <span><strong>Date:</strong> October 2, 2026</span>
+      <a href="https://www.linkedin.com/in/thirunavukkarasu-palaniappa-28194228b/" target="_blank" rel="noopener noreferrer">LinkedIn profile ↗</a>
+    </div>
+  </div>
+</header>
+<nav class="nav" aria-label="Coursework navigation">
+  <div class="container nav__inner">
+    <a href="#overview">Overview</a><a href="#exercise1">Exercise 1</a><a href="#exercise2">Exercise 2</a>
+    <a href="#exercise3">Exercise 3</a><a href="#exercise4">Exercise 4</a><a href="#exercise5">Exercise 5</a>
+    <a href="#critical">Critical Thinking</a><a href="#sources">Sources</a>
+  </div>
+</nav>
+<main id="main" class="container content">
+<section id="overview" class="card">
+  <div class="section-heading"><p class="eyebrow">Submission overview</p><h2>Assignment Information</h2></div>
+  <div class="stats">
+    <div><span class="stat__label">Coursework</span><strong>CW 03</strong></div>
+    <div><span class="stat__label">Track</span><strong>Graduate</strong></div>
+    <div><span class="stat__label">Core exercises</span><strong>5</strong></div>
+    <div><span class="stat__label">Investigations</span><strong>6</strong></div>
+  </div>
+  <p>This document organizes the five CSS exercises and the six Critical Thinking investigations required for the graduate track. The final submission must include personally collected evidence, actual browser measurements, and a reflection tied to each investigation.</p>
+  <div class="notice"><strong>Completion note:</strong> Fields marked <code>[Complete with your own result]</code> are intentionally left for your own test data. Do not submit placeholders or claim an experiment was run until you have performed and documented it.</div>
+</section>
+
+<section id="exercise1" class="card">
+  <div class="section-heading"><p class="eyebrow">Exercise 01</p><h2>External Style Sheet — Text Color</h2></div>
+  <p class="muted">Demonstrate an external stylesheet and a dark-red text treatment.</p>
+  <div class="demo demo--red">
+    <p>This paragraph demonstrates dark red text applied through an external CSS rule.</p>
+  </div>
+  <h3>Implementation</h3>
+  <pre><code>/* styles.css */
+.demo--red {
+  color: darkred;
+  font-family: "Roboto", Arial, sans-serif;
+  line-height: 1.6;
+}</code></pre>
+  <p class="small">The page links to <code>styles.css</code> in its <code>&lt;head&gt;</code>. Verify the stylesheet in DevTools → Network or Sources.</p>
+</section>
+
+<section id="exercise2" class="card">
+  <div class="section-heading"><p class="eyebrow">Exercise 02</p><h2>Debugging CSS</h2></div>
+  <p class="muted">Three findings are documented with the original declaration, correction, and explanation.</p>
+  <div class="debug-panel">
+    <h3>My Debugging Analysis</h3>
+    <div class="debug-item">
+      <span class="debug-item__number">01</span><div>
+      <h4>Declaration formatting: missing semicolon</h4>
+      <p><strong>Original:</strong> <code>color: red</code></p>
+      <p><strong>Correction:</strong> <code>color: red;</code></p>
+      <p><strong>Reasoning:</strong> A semicolon clearly terminates a declaration and makes later edits safer. Because this is the last declaration in the rule, the browser may still parse it correctly; I will distinguish code-quality improvement from a demonstrated rendering defect when I inspect it.</p>
+      </div>
+    </div>
+    <div class="debug-item">
+      <span class="debug-item__number">02</span><div>
+      <h4>Heading hierarchy: one size for three levels</h4>
+      <p><strong>Original:</strong> <code>h1, h2, h3 { font-size: 2.5em; }</code></p>
+      <p><strong>Correction:</strong> <code>h1 {font-size:2.5rem} h2 {font-size:1.8rem} h3 {font-size:1.25rem}</code></p>
+      <p><strong>Reasoning:</strong> Separate sizes preserve a visible hierarchy between page title, section title, and subsection. This is a design issue rather than invalid CSS; the computed sizes should be checked in the browser.</p>
+      </div>
+    </div>
+    <div class="debug-item">
+      <span class="debug-item__number">03</span><div>
+      <h4>Declaration formatting: missing semicolon</h4>
+      <p><strong>Original:</strong> <code>box-sizing: border-box</code></p>
+      <p><strong>Correction:</strong> <code>box-sizing: border-box;</code></p>
+      <p><strong>Reasoning:</strong> The terminator makes the declaration consistent and reduces editing mistakes. As with finding 1, a final declaration can parse without a semicolon, so the evidence should report what DevTools actually shows.</p>
+      </div>
+    </div>
+  </div>
+  <h3>Corrected CSS</h3>
+  <pre><code>body {
+  font-family: "Times New Roman", serif;
+  margin-inline: 20%;
+  text-align: justify;
+  background: ivory;
+  color: darkred;
+}
+
+h1 { color: #b00000; font-size: 2.5rem; margin: 20px 0; }
+h2 { color: #b00000; font-size: 1.8rem; margin: 20px 0; }
+h3 { color: #b00000; font-size: 1.25rem; margin: 20px 0; }
+
+.container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+a { color: #0000ff; text-decoration: underline; }</code></pre>
+  <p class="notice"><strong>Evidence to add:</strong> Capture the original CSS in DevTools, the corrected rules, and a brief observation of the browser's parsing/computed style.</p>
+</section>
+
+<section id="exercise3" class="card">
+  <div class="section-heading"><p class="eyebrow">Exercise 03</p><h2>Song Lyrics Styling</h2></div>
+  <p class="muted">A typography sample using the required metadata and verse/chorus class patterns.</p>
+  <div class="lyrics">
+    <p class="artist">Traditional lullaby</p>
+    <h3 class="song-title">Rock-a-Bye Baby</h3>
+    <p class="album">Nursery rhymes · Public domain</p>
+    <p class="year">c. 1765</p>
+    <div class="verse">
+      <p>Rock-a-bye baby, on the treetop,</p>
+      <p>When the wind blows, the cradle will rock,</p>
+      <p>When the bough breaks, the cradle will fall,</p>
+      <p>And down will come baby, cradle and all.</p>
+    </div>
+    <div class="chorus"><p>[Use the required chorus block from your course prompt, if specified.]</p></div>
+  </div>
+  <p class="small">The sample uses public-domain traditional text. Confirm the exact text and class requirements against your course prompt before submitting.</p>
+</section>
+
+<section id="exercise4" class="card">
+  <div class="section-heading"><p class="eyebrow">Exercise 04</p><h2>External Stylesheet — Separation of Concerns</h2></div>
+  <p>The lyric presentation is styled in the external <code>styles.css</code> file, rather than inline on each element. This keeps content and presentation separate and allows the same class rules to be reused.</p>
+  <pre><code>&lt;link rel="stylesheet" href="styles.css"&gt;</code></pre>
+  <div class="notice"><strong>Browser check:</strong> Disable <code>styles.css</code> in DevTools, record what changes, then re-enable it. Add your own before/after screenshot and observation.</div>
+</section>
+
+<section id="exercise5" class="card">
+  <div class="section-heading"><p class="eyebrow">Exercise 05</p><h2>School Website Design — Weekly Timetable</h2></div>
+  <p class="muted">Semantic table structure, CSS variables, and responsive overflow handling.</p>
+  <div class="table-wrap" role="region" aria-label="Weekly school timetable" tabindex="0">
+    <table class="timetable">
+      <caption>Example weekly timetable</caption>
+      <thead><tr><th scope="col">Time</th><th scope="col">Monday</th><th scope="col">Tuesday</th><th scope="col">Wednesday</th><th scope="col">Thursday</th><th scope="col">Friday</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">9:00</th><td class="subject subject--seminar"><span class="subject__mark" aria-hidden="true">◆</span> CS Seminar</td><td class="subject subject--lab"><span class="subject__mark" aria-hidden="true">■</span> CS Lab</td><td class="subject subject--adv"><span class="subject__mark" aria-hidden="true">▲</span> Advanced Programming</td><td class="subject subject--python"><span class="subject__mark" aria-hidden="true">●</span> Python</td><td class="subject subject--lab"><span class="subject__mark" aria-hidden="true">■</span> CS Lab</td></tr>
+        <tr><th scope="row">10:00</th><td class="subject subject--python"><span class="subject__mark" aria-hidden="true">●</span> Python</td><td class="subject subject--adv"><span class="subject__mark" aria-hidden="true">▲</span> Advanced Programming</td><td class="subject subject--seminar"><span class="subject__mark" aria-hidden="true">◆</span> CS Seminar</td><td class="subject subject--lab"><span class="subject__mark" aria-hidden="true">■</span> CS Lab</td><td class="subject subject--adv"><span class="subject__mark" aria-hidden="true">▲</span> Advanced Programming</td></tr>
+        <tr><th scope="row">11:00</th><td colspan="5" class="break-cell">Break</td></tr>
+        <tr><th scope="row">11:30</th><td class="subject subject--lab"><span class="subject__mark" aria-hidden="true">■</span> CS Lab</td><td class="subject subject--python"><span class="subject__mark" aria-hidden="true">●</span> Python</td><td class="subject subject--python"><span class="subject__mark" aria-hidden="true">●</span> Python</td><td class="subject subject--seminar"><span class="subject__mark" aria-hidden="true">◆</span> CS Seminar</td><td class="subject subject--seminar"><span class="subject__mark" aria-hidden="true">◆</span> CS Seminar</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="legend" aria-label="Subject legend">
+    <span>◆ CS Seminar</span><span>■ CS Lab</span><span>▲ Advanced Programming</span><span>● Python</span>
+  </div>
+  <p class="small">Subject identity is communicated by its text and symbol as well as color. Horizontal scrolling is contained within the table region on narrow screens.</p>
+</section>
+
+<section id="critical" class="card">
+  <div class="section-heading"><p class="eyebrow">Evidence-based assessment</p><h2>Critical Thinking Lab</h2></div>
+  <p class="notice"><strong>Required for every response:</strong> screenshot of your own page with DevTools open, exact HTML/CSS tested, one measured or computed value, and a 2–3 sentence reflection tied to that evidence. Be ready to make an instructor-selected change live and predict its result before refreshing.</p>
+
+  <article class="lab">
+    <h3>UG 01 · Cascade — Forensic Cascade Reconstruction</h3>
+    <p><strong>Test markup:</strong></p>
+    <pre><code>&lt;section id="cascade-scope"&gt;
+  &lt;p class="cascade-test"&gt;Cascade test&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+    <p><strong>Test CSS:</strong></p>
+    <pre><code>p { color: seagreen; }
+.cascade-test { color: royalblue; }
+section #cascade-test { color: darkorange; }</code></pre>
+    <p><strong>Important correction:</strong> Add <code>id="cascade-test"</code> to the paragraph for the third selector to match. Then rank specificity before refreshing: element (0,0,1), class (0,1,0), and section + ID (1,0,1). The ID-containing selector should win if all three match and no other cascade factors intervene.</p>
+    <p><strong>Prediction recorded before test:</strong> [Write your prediction and timestamp.]</p>
+    <p><strong>Actual Computed result/source:</strong> [Enter computed color and winning selector from DevTools.]</p>
+    <p><strong>Reflection (2–3 sentences):</strong> [Explain whether prediction matched, identify overridden rules, and describe what changed after temporarily removing the ID rule.]</p>
+    <figure><img src="images/ug01-cascade.png" alt="Add your own screenshot showing the cascade test and DevTools Styles and Computed panels"><figcaption>UG01 evidence — replace with your annotated screenshot and visible timestamp.</figcaption></figure>
+  </article>
+
+  <article class="lab">
+    <h3>UG 02 · Box Model — Pixel Budget Under Constraint</h3>
+    <p><strong>Goal:</strong> At a 900px viewport, make a selected panel's rendered outer width exactly 420px without using <code>width: 420px</code>.</p>
+    <p><strong>Test CSS (starting point):</strong></p>
+    <pre><code>.budget-panel {
+  width: 46.6667%;
+  padding: 20px;
+  border: 5px solid #214e8a;
+  box-sizing: border-box;
+}</code></pre>
+    <p><strong>Measurement method:</strong> Set DevTools viewport to 900px, inspect the parent content width, then run <code>document.querySelector('.budget-panel').getBoundingClientRect().width</code>. If the containing block is not 900px, calculate against its actual content width and adjust without hardcoding 420px.</p>
+    <p><strong>Arithmetic and before/after values:</strong> [Show content + padding + border calculation, measured content-box value, border-box value, and the changed declaration.]</p>
+    <p><strong>Reflection (2–3 sentences):</strong> [Explain how box-sizing changes the meaning of width and how the measured result confirms your arithmetic.]</p>
+    <figure><img src="images/ug02-box-model.png" alt="Add two DevTools box-model screenshots at a 900 pixel viewport"><figcaption>UG02 evidence — before and after box-sizing switch, with the measured widths visible.</figcaption></figure>
+  </article>
+
+  <article class="lab">
+    <h3>UG 03 · Responsive Design — Breakpoint Failure Study</h3>
+    <p><strong>Define the failure test before resizing:</strong> [Example: timetable causes horizontal page overflow, or lyric text column falls below a defined share of its card.]</p>
+    <p><strong>First failing width:</strong> [px] · <strong>Computed cause:</strong> [record element width, padding, font size, grid/flex values].</p>
+    <p><strong>One-query repair:</strong> [Add one media query just below the observed failure width. Keep all desktop styles above 1000px unchanged.]</p>
+    <p><strong>Validation:</strong> [Test 1px above/below breakpoint and compare at 1200px.]</p>
+    <p><strong>Reflection (2–3 sentences):</strong> [Connect the measured cause to the minimal fix and report whether the desktop regression check passed.]</p>
+    <figure><img src="images/ug03-breakpoint.png" alt="Add before and after responsive screenshots and a desktop regression screenshot"><figcaption>UG03 evidence — same failure width before/after plus desktop comparison above 1000px.</figcaption></figure>
+  </article>
+
+  <article class="lab">
+    <h3>UG 04 · Accessibility — Color Is Not the Message</h3>
+    <p><strong>Audit target:</strong> the timetable subject states in Exercise 5.</p>
+    <p><strong>Computed pairs and ratios:</strong> [Record two actual foreground/background pairs and contrast ratios from a contrast checker.] Normal text generally requires 4.5:1 for WCAG AA; large text and meaningful non-text graphics use different thresholds, so state which applies to each pair.</p>
+    <p><strong>Non-color cues:</strong> the visible subject name and distinct symbol (◆, ■, ▲, ●) carry the category. Verify that assistive technology receives the text label and that symbols are decorative only because the adjacent text already communicates the meaning.</p>
+    <p><strong>Grayscale/peer check:</strong> [Record what changed in grayscale, peer initials, and whether the peer identified each subject without color.]</p>
+    <p><strong>Reflection (2–3 sentences):</strong> [Explain contrast separately from distinguishing categories and report what your grayscale and accessibility-tree checks showed.]</p>
+    <figure><img src="images/ug04-accessibility.png" alt="Add contrast checker and grayscale evidence with peer interpretation"><figcaption>UG04 evidence — contrast results, grayscale capture, and peer initials/interpretation.</figcaption></figure>
+  </article>
+
+  <article class="lab lab--grad">
+    <h3>GR 01 · Architecture — Refactor With a Measured Tradeoff</h3>
+    <p><strong>Research question:</strong> For the same timetable interface, how do utility-oriented and component-oriented CSS architectures compare under three predefined criteria?</p>
+    <p><strong>Criteria to define before coding:</strong> (1) selector and declaration counts; (2) class-token count in timetable cells; (3) number of edits needed for one specified subject-style change. State counting rules before collecting results.</p>
+    <p><strong>Working versions:</strong> <a href="architecture/utility.html">Utility-oriented timetable</a> · <a href="architecture/component.html">Component-oriented timetable</a>.</p>
+    <p><strong>Evidence table:</strong></p>
+    <table class="data-table"><thead><tr><th>Criterion</th><th>Utility version</th><th>Component version</th><th>Interpretation</th></tr></thead><tbody>
+      <tr><th>Selectors / declarations</th><td>[your count]</td><td>[your count]</td><td>[what count indicates/does not indicate]</td></tr>
+      <tr><th>Cell class tokens</th><td>[your count]</td><td>[your count]</td><td>[markup tradeoff]</td></tr>
+      <tr><th>Edits for one change</th><td>[your count]</td><td>[your count]</td><td>[scope/reuse observation]</td></tr>
+    </tbody></table>
+    <p><strong>Decision and disadvantage:</strong> [Select and defend an architecture using your evidence. Acknowledge one disadvantage of the selected approach.]</p>
+    <p><strong>Live naming defense:</strong> [Explain one class name and how it describes role rather than a temporary color or visual detail.]</p>
+    <figure><img src="images/gr01-diff.png" alt="Add local version history diff and comparison evidence"><figcaption>GR01 evidence — local diff, counts, and the same interface rendered in both versions.</figcaption></figure>
+  </article>
+
+  <article class="lab lab--grad">
+    <h3>GR 02 · Experimental Design — CSS Performance Experiment</h3>
+    <p><strong>Falsifiable claim:</strong> [Predict which visually equivalent CSS implementation will have lower median time for a precisely defined browser operation, and specify a threshold/direction that could be disproved.]</p>
+    <p><strong>Test harness:</strong> <a href="performance.html">Open the repeatable browser experiment</a>. It provides a small in-browser trial runner; use the same browser, viewport, content, and procedure for both versions.</p>
+    <p><strong>Control at least three confounds:</strong> browser/version and device; viewport and page content; run order and warm-up; background applications; network/cache (prefer local assets). Record exactly which controls you used.</p>
+    <p><strong>Raw results:</strong> Run five trials per implementation and paste every trial, units, environment, and median below. Do not substitute sample/example data.</p>
+    <table class="data-table"><thead><tr><th>Trial</th><th>Implementation A (ms)</th><th>Implementation B (ms)</th></tr></thead><tbody>
+      <tr><th>1</th><td>[ ]</td><td>[ ]</td></tr><tr><th>2</th><td>[ ]</td><td>[ ]</td></tr><tr><th>3</th><td>[ ]</td><td>[ ]</td></tr><tr><th>4</th><td>[ ]</td><td>[ ]</td></tr><tr><th>5</th><td>[ ]</td><td>[ ]</td></tr>
+    </tbody></table>
+    <p><strong>Environment:</strong> [browser/version, OS, device, viewport, trial procedure, relevant settings].</p>
+    <p><strong>Medians:</strong> A [ ] ms · B [ ] ms · <strong>Difference:</strong> [ ]%.</p>
+    <p><strong>Interpretation/reflection (2–3 sentences):</strong> [Describe observed difference and variability, whether the data supports the claim, and limits. Avoid generalizing beyond this test setup.]</p>
+    <figure><img src="images/gr02-results.png" alt="Add screenshot showing the raw results and environment of your own performance experiment"><figcaption>GR02 evidence — raw local measurements, environment details, and median calculation.</figcaption></figure>
+  </article>
+</section>
+
+<section class="card" id="evidence">
+  <div class="section-heading"><p class="eyebrow">Final quality check</p><h2>Evidence & Submission Checklist</h2></div>
+  <ul class="checklist">
+    <li>Student name, course/section, date, and assignment title are accurate.</li>
+    <li>Exercises 1–5 are complete and work in a browser.</li>
+    <li>Exercise 2 has a styled answer container, three findings, and corrected CSS.</li>
+    <li>UG01–UG04 each include the exact tested code, actual value, screenshot, and reflection.</li>
+    <li>GR01 includes two working architectures, three criteria defined before coding, evidence, defended choice, and disadvantage.</li>
+    <li>GR02 includes a falsifiable claim, at least three controls, five trials per version, raw measurements, environment, medians, and cautious interpretation.</li>
+    <li>All evidence images are your own, have meaningful alt text/captions, and render from relative paths.</li>
+    <li>Sources and assistance statement are accurate; no placeholders remain.</li>
+    <li>Open the main HTML and every linked page locally; verify no broken assets or unintended horizontal page overflow.</li>
+    <li>Submit one ZIP or published URL in the I-College CW03 folder.</li>
+  </ul>
+</section>
+
+<section class="card" id="sources">
+  <div class="section-heading"><p class="eyebrow">Academic transparency</p><h2>Sources & Assistance</h2></div>
+  <ul>
+    <li>CSC 4370/6370 Coursework 03 — CSS Foundations Lab assignment instructions and Critical Thinking Lab requirements, provided in the course materials.</li>
+    <li>[Add any additional source you actually consulted: title, author/organization, URL, and access date, using your instructor's required citation style.]</li>
+  </ul>
+  <p><strong>Assistance statement:</strong> This document was prepared with AI assistance for organization, wording, and code scaffolding. I will verify, test, revise, and document my own implementation and results in accordance with course policy. [Adjust this statement to accurately match the assistance you used and course rules.]</p>
+</section>
+</main>
+<footer><div class="container footer__inner"><span>Thirunavukkarasu Palaniappa</span><span>CSC 4370/6370 · Coursework 03</span><a href="#main">Back to top ↑</a></div></footer>
+</body>
+</html>
