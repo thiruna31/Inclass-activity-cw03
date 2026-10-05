@@ -1,0 +1,27 @@
+/* school-utility.css - UTILITY-oriented architecture (one job per class) */
+:root { --navy: #0b2a55; --blue: #1e4d8c; --gold: #f2b705; --sky: #e8f0fb; }
+.m-0 { margin: 0; }
+.mr-3 { margin-right: 15px; }
+.p-2 { padding: 10px; }
+.p-3 { padding: 10px 20px; }
+.p-5 { padding: 20px; }
+.font { font-family: Arial, sans-serif; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+.no-ul { text-decoration: none; }
+.text-c { text-align: center; }
+.text-white { color: #fff; }
+.text-navy { color: var(--navy); }
+.bg-sky { background: var(--sky); }
+.bg-blue { background: var(--blue); }
+.bg-gold { background: var(--gold); }
+.bg-white { background: #fff; }
+.bg-seminar { background: #cfe0ff; }
+.bg-lab { background: #fff4cc; }
+.bg-prog { background: #9db9e6; }
+.bg-python { background: #ffe38a; }
+.bg-break { background: #dfe6f2; }
+.bd { border: 1px solid #b9c8e0; }
+.bb-gold { border-bottom: 5px solid var(--gold); }
+.w-full { width: 100%; }
+.collapse { border-collapse: collapse; }

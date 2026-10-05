@@ -1,1 +1,0 @@
-Add your own screenshots here; use the paths/captions in the main HTML.

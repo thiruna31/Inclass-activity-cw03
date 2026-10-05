@@ -1,0 +1,80 @@
+<!-- CRITICAL THINKING LAB -->
+<section id="lab">
+    <h2>Critical Thinking Lab</h2>
+
+    <h3>Question 1: Refactor With a Measured Tradeoff</h3>
+    <p>Both architectures style the same Exercise 5 page and look identical: the utility version uses <code>school-utility.css</code> and the component version uses <code>school.css</code>.</p>
+
+    <p><strong>Three criteria, defined before coding:</strong></p>
+    <ol>
+        <li><strong>Stylesheet size:</strong> number of selectors and declarations (fewer selectors and fewer lines is better).</li>
+        <li><strong>HTML weight:</strong> total classes on the table cells (fewer means cleaner markup).</li>
+        <li><strong>Change cost:</strong> how many places must change to recolor one subject (fewer is better).</li>
+    </ol>
+
+    <p><strong>Evidence against each criterion:</strong></p>
+    <table>
+        <tr><th>Criterion</th><th>Utility</th><th>Component</th></tr>
+        <tr><td>1. Selectors / declarations</td><td>26 / 29</td><td>15 / 33</td></tr>
+        <tr><td>2. Classes on table cells (<code>td</code>/<code>th</code>)</td><td>110</td><td>52</td></tr>
+        <tr><td>3. Places to change to recolor "Python"</td><td>1 CSS rule (<code>.bg-python</code>), but the class is reusable, so it also recolors any other element using it</td><td>1 CSS rule (<code>.tt__cell--python</code>), which only affects timetable cells</td></tr>
+    </table>
+    <p>Counts come from a script that strips comments and counts every selector, rule and declaration in the two stylesheets, and every class on each <code>td</code>/<code>th</code> in the two HTML files. Criterion 1 is mixed: component wins on selectors and utility wins on declarations.</p>
+
+    <p><strong>Decision:</strong> I choose the <strong>component-oriented</strong> architecture. It wins criterion 2 clearly (about half the classes in the HTML), wins on selectors in criterion 1 (15 instead of 26), and gives a safer recolor for criterion 3 because a change cannot leak outside the timetable. It is slightly behind on declarations.</p>
+    <p><strong>Acknowledged disadvantage:</strong> it has more declarations (33 vs 29), and its classes are tied to the timetable, so a new page cannot reuse them freely the way it can with utilities like <code>.p-2</code> or <code>.text-c</code>.</p>
+
+    <p><strong>Naming decision I can explain live:</strong> I named the class <code>.tt__cell--lab</code>, not <code>.gold-cell</code>. The name follows the BEM pattern (block <code>tt</code>, element <code>cell</code>, modifier <code>lab</code>) and describes the role, which is the subject, not the current color. If the theme changes from gold to green, the name still makes sense and the HTML does not change.</p>
+
+    <p><strong>Version-history diff (utility → component):</strong> the stylesheet went from 27 lines to 16. The CSS diff removes 26 lines and adds 15, and the HTML diff changes 24 lines (12 removed, 12 added), because the long class lists on each cell become two classes. Commands and output:</p>
+<pre><code>$ git diff --no-index --stat school-utility.css school.css
+ school-utility.css =&gt; school.css | 41 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 26 deletions(-)
+
+$ git diff --no-index --stat timetable-utility.html timetable.html
+ timetable-utility.html =&gt; timetable.html | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)</code></pre>
+
+    <h3>Question 2: Design a CSS Performance Experiment</h3>
+    <p><strong>Falsifiable claim:</strong> the utility-class timetable takes at least 5% more median time to parse, style and lay out than the component-class version. The claim fails if the utility median is less than 5% higher than the component median.</p>
+
+    <p><strong>Repeatable experiment:</strong> for each version, the script below writes a 1,500-row timetable (9,000 cells) into a fresh hidden iframe, forces layout by reading <code>offsetHeight</code>, and times it with <code>performance.now()</code>. It takes 5 trials per version.</p>
+<pre><code>function timed(html) {
+    var f = document.createElement("iframe");
+    document.body.appendChild(f);
+    var d = f.contentDocument;
+    var t0 = performance.now();
+    d.open(); d.write(html); d.close();
+    void d.body.offsetHeight;          // force style + layout
+    var t = performance.now() - t0;
+    document.body.removeChild(f);
+    return t;
+}
+// before every timed run, run the same version once and throw the result away
+function measure(html) { timed(html); return timed(html); }</code></pre>
+
+    <p><strong>Controlled confounding variables:</strong></p>
+    <ul>
+        <li><strong>Content and appearance:</strong> identical rows, text and computed styles in both versions.</li>
+        <li><strong>Cold vs warm start:</strong> a fresh iframe for every trial, and a discarded throwaway run before every timed run.</li>
+        <li><strong>Ordering and background load:</strong> the two versions alternate which goes first each trial, the HTML string is built before the timer starts, and every trial ran in one browser instance with nothing else open.</li>
+        <li><strong>Network and cache:</strong> nothing is fetched, because the CSS is inline in the test document.</li>
+    </ul>
+
+    <p><strong>Raw measurements:</strong></p>
+    <table>
+        <tr><th>Trial</th><th>Utility (ms)</th><th>Component (ms)</th></tr>
+        <tr><td>1</td><td>147.50</td><td>126.60</td></tr>
+        <tr><td>2</td><td>126.20</td><td>133.20</td></tr>
+        <tr><td>3</td><td>179.20</td><td>139.20</td></tr>
+        <tr><td>4</td><td>193.00</td><td>130.40</td></tr>
+        <tr><td>5</td><td>134.30</td><td>181.70</td></tr>
+        <tr><td><strong>Median</strong></td><td><strong>147.50</strong></td><td><strong>133.20</strong></td></tr>
+    </table>
+    <p><strong>Median calculation:</strong> utility sorted is 126.2, 134.3, 147.5, 179.2, 193.0, so the median is 147.5 ms. Component sorted is 126.6, 130.4, 133.2, 139.2, 181.7, so the median is 133.2 ms. Difference = (147.5 / 133.2 − 1) × 100 = 10.7%.</p>
+    <p><strong>Test environment:</strong> headless Chromium 141 on Linux x86_64, 1 logical CPU, 1280×800 screen, device pixel ratio 1, 1,500 rows (9,000 cells), 5 trials per version.</p>
+    <p><strong>Repeat run (same setup):</strong> the utility median was 171.6 ms and the component median 153.4 ms, a 11.9% difference, with the ranges again overlapping (utility 135.8 to 223.8 ms, component 141.7 to 265.3 ms). The individual times moved a lot between runs, which is itself evidence of how noisy this measurement is.</p>
+    <p><strong>Something I found while testing:</strong> my first run showed that whichever version ran first in a pair was always slower (about 183 ms against about 138 ms). That is an order effect, not a CSS effect. I fixed it by adding a discarded throwaway run before every timed run, then reran the experiment. The table above is the corrected run.</p>
+    <p><strong>Conclusion:</strong> the medians differ by 10.7%, which is above the 5% threshold, but the two sets of times overlap (utility 126.2 to 193.0 ms, component 126.6 to 181.7 ms) and each version has a slow outlier. So the data does not reliably support the claim. The honest result is "no reliable difference detected": the utility version may be slightly slower, but five noisy trials on one machine cannot show it. It also says nothing about other browsers or real pages, and part of any difference could come from the utility HTML simply having more class text to parse.</p>
+</section>
+

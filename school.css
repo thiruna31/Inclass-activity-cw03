@@ -1,0 +1,16 @@
+/* school.css - COMPONENT-oriented architecture (BEM-style names) */
+:root { --navy: #0b2a55; --blue: #1e4d8c; --gold: #f2b705; --sky: #e8f0fb; }
+.page { margin: 0; font-family: Arial, sans-serif; background: var(--sky); }
+.page__header { background: var(--blue); color: #fff; padding: 20px; border-bottom: 5px solid var(--gold); }
+.page__title { margin: 0; }
+.page__nav { background: var(--gold); padding: 10px 20px; }
+.page__link { color: var(--navy); font-weight: bold; text-decoration: none; margin-right: 15px; }
+.page__main { padding: 20px; }
+.tt { width: 100%; border-collapse: collapse; background: #fff; }
+.tt__cell { border: 1px solid #b9c8e0; padding: 10px; text-align: center; }
+.tt__cell--head { background: var(--blue); color: #fff; }
+.tt__cell--seminar { background: #cfe0ff; }
+.tt__cell--lab { background: #fff4cc; }
+.tt__cell--prog { background: #9db9e6; }
+.tt__cell--python { background: #ffe38a; }
+.tt__cell--break { background: #dfe6f2; font-style: italic; }

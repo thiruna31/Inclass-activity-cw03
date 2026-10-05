@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS Performance Experiment</title>
+<style>
+body { font-family: Arial, sans-serif; background: #e8f0fb; color: #14213d; margin: 0; padding: 24px 6%; }
+h1 { color: #1e4d8c; border-bottom: 4px solid #f2b705; padding-bottom: 6px; }
+button { background: #f2b705; color: #0b2a55; border: 0; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+button:hover { background: #0b2a55; color: #f2b705; }
+table { border-collapse: collapse; background: #fff; margin: 16px 0; min-width: 380px; }
+th, td { border: 1px solid #b9c8e0; padding: 8px 14px; text-align: center; }
+th { background: #1e4d8c; color: #fff; }
+pre { background: #0b2a55; color: #ffe9a0; padding: 12px; border-radius: 6px; white-space: pre-wrap; }
+iframe { position: absolute; left: -10000px; top: 0; width: 900px; height: 600px; border: 0; }
+</style>
+</head>
+<body>
+<h1>CSS Performance Experiment</h1>
+<p><strong>Claim:</strong> the utility-class timetable needs at least 5% more time to parse, style and lay out than the component-class timetable (same visual result).</p>
+<p><strong>Method:</strong> each trial writes 1,500 timetable rows into a fresh hidden iframe, forces layout, and records the elapsed time. Every timed run is preceded by a discarded throwaway run of the same version, and the order alternates A, B, A, B so background load is spread evenly.</p>
+<button id="run">Run 5 trials each</button>
+<p id="status"></p>
+<table id="out" hidden>
+    <thead><tr><th>Trial</th><th>Utility (ms)</th><th>Component (ms)</th></tr></thead>
+    <tbody></tbody>
+</table>
+<pre id="summary" hidden></pre>
+
+<script>
+// Same rules as school-utility.css / school.css, limited to what the table needs.
+var CSS_A = ".bd{border:1px solid #b9c8e0}.p-2{padding:10px}.text-c{text-align:center}.w-full{width:100%}.collapse{border-collapse:collapse}.bg-white{background:#fff}.bg-blue{background:#1e4d8c}.text-white{color:#fff}.bg-seminar{background:#cfe0ff}.bg-lab{background:#fff4cc}.bg-prog{background:#9db9e6}.bg-python{background:#ffe38a}";
+var CSS_B = ".tt{width:100%;border-collapse:collapse;background:#fff}.tt__cell{border:1px solid #b9c8e0;padding:10px;text-align:center}.tt__cell--seminar{background:#cfe0ff}.tt__cell--lab{background:#fff4cc}.tt__cell--prog{background:#9db9e6}.tt__cell--python{background:#ffe38a}";
+var SUBJECTS = ["seminar", "lab", "prog", "python"];
+var ROWS = 1500, TRIALS = 5;
+
+function html(util) {
+    var cell = function (k) { return util ? '<td class="bd p-2 text-c bg-' + k + '">x</td>' : '<td class="tt__cell tt__cell--' + k + '">x</td>'; };
+    var tbl = util ? '<table class="w-full collapse bg-white">' : '<table class="tt">';
+    var rows = "";
+    for (var r = 0; r < ROWS; r++) {
+        rows += "<tr>";
+        for (var c = 0; c < 6; c++) rows += cell(SUBJECTS[(r + c) % 4]);
+        rows += "</tr>";
+    }
+    return "<!DOCTYPE html><html><head><style>" + (util ? CSS_A : CSS_B) + "</style></head><body>" + tbl + rows + "<\/table><\/body><\/html>";
+}
+function measure(util) {
+    timed(util);                                       // throwaway run: removes the "first run after a switch is slower" effect
+    return timed(util);
+}
+function timed(util) {
+    var f = document.createElement("iframe");
+    document.body.appendChild(f);
+    var d = f.contentDocument, src = html(util);      // string built BEFORE timing starts
+    var t0 = performance.now();
+    d.open(); d.write(src); d.close();
+    void d.body.offsetHeight;                          // force style + layout
+    var t = performance.now() - t0;
+    document.body.removeChild(f);
+    return t;
+}
+function median(a) { var s = a.slice().sort(function (x, y) { return x - y; }); return s[Math.floor(s.length / 2)]; }
+function fmt(n) { return n.toFixed(2); }
+
+function runAll() {
+    var A = [], B = [], tb = document.querySelector("#out tbody");
+    tb.innerHTML = "";
+    measure(true); measure(false);                     // warm-up, discarded
+    for (var i = 0; i < TRIALS; i++) {
+        var a, b;                                         // alternate order each trial
+        if (i % 2) { b = measure(false); a = measure(true); }
+        else { a = measure(true); b = measure(false); }
+        A.push(a); B.push(b);
+        tb.innerHTML += "<tr><td>" + (i + 1) + "</td><td>" + fmt(a) + "</td><td>" + fmt(b) + "</td></tr>";
+    }
+    var mA = median(A), mB = median(B), diff = (mA / mB - 1) * 100;
+    tb.innerHTML += "<tr><td><strong>Median</strong></td><td><strong>" + fmt(mA) + "</strong></td><td><strong>" + fmt(mB) + "</strong></td></tr>";
+    var overlap = Math.min.apply(null, A) <= Math.max.apply(null, B) && Math.min.apply(null, B) <= Math.max.apply(null, A);
+    var verdict = diff >= 5 ? "Claim (>= 5% slower) holds in this run" : "Claim (>= 5% slower) is NOT supported in this run";
+    if (overlap) verdict += ", but the two ranges overlap, so treat it as inconclusive";
+    document.getElementById("out").hidden = false;
+    var s = document.getElementById("summary"); s.hidden = false;
+    s.textContent =
+        "Median difference (utility vs component): " + diff.toFixed(1) + "%\n" + verdict + ".\n\n" +
+        "Environment\n" +
+        "Browser: " + navigator.userAgent + "\n" +
+        "Logical CPUs: " + navigator.hardwareConcurrency + "\n" +
+        "Screen: " + screen.width + "x" + screen.height + ", DPR " + devicePixelRatio + "\n" +
+        "Rows: " + ROWS + " (" + ROWS * 6 + " cells), trials per implementation: " + TRIALS + "\n" +
+        "Raw utility (ms): " + A.map(fmt).join(", ") + "\n" +
+        "Raw component (ms): " + B.map(fmt).join(", ");
+}
+document.getElementById("run").onclick = function () {
+    var btn = this, st = document.getElementById("status");
+    btn.disabled = true;
+    st.textContent = "Running... this takes up to a minute. Please wait and do not switch tabs.";
+    setTimeout(function () {
+        try { runAll(); st.textContent = "Done."; }
+        catch (e) { st.textContent = "Error: " + e.message; }
+        btn.disabled = false;
+    }, 100);
+};
+</script>
+</body>
+</html>
